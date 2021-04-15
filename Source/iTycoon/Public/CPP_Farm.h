@@ -44,9 +44,7 @@ public:
 	UPROPERTY()
 	float BuildingTimeInSeconds;
 
-	UFUNCTION()
-		void UpdateBuilding(float deltaTime);
+	void UpdateBuilding(float deltaTime);
 
-	UFUNCTION()
-		void UpdateProdaction();
+	void UpdateProdaction(float deltaTime);
 };

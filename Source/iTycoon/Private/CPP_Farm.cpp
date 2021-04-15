@@ -7,10 +7,10 @@ ACPP_Farm::ACPP_Farm()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	this->Capacity = (rand() % 100) + 30;
+	this->Capacity = (rand() % 70) + 30;
 	this->Power = 2;
 	this->Product = 0;
-	this->DurationInSeconds = 2.f;
+	this->DurationInSeconds = 1.5f;
 
 	this->isBuilding = true;
 	this->BuildingTimeInSeconds = 5.f;
@@ -44,7 +44,7 @@ void ACPP_Farm::Tick(float DeltaTime)
 		UpdateBuilding(DeltaTime);
 	}
 
-	UpdateProdaction();
+	UpdateProdaction(DeltaTime);
 }
 
 void ACPP_Farm::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -63,10 +63,13 @@ void ACPP_Farm::UpdateBuilding(float deltaTime) {
 	}
 }
 
-void ACPP_Farm::UpdateProdaction() {
-	FTimerHandle UnusedHandle;
-	GetWorldTimerManager().UnPauseTimer(UnusedHandle);
-	GetWorldTimerManager().SetTimer(UnusedHandle, [this]() {
+void ACPP_Farm::UpdateProdaction(float deltaTime) {
+	if (isBuilding || Product == Capacity) return;
+
+	BuildingTimeInSeconds -= deltaTime;
+
+	if (BuildingTimeInSeconds <= 0) {
+		BuildingTimeInSeconds = 1.5f;
 
 		if (!isBuilding && Product != Capacity) {
 			if (Product + Power > Capacity) {
@@ -77,6 +80,5 @@ void ACPP_Farm::UpdateProdaction() {
 				Product += Power;
 			}
 		}
-
-	}, DurationInSeconds, false);
+	}
 }
